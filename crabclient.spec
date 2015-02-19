@@ -1,11 +1,11 @@
-### RPM cms crabclient 3.3.6
+### RPM cms crabclient 3.3.10
 ## INITENV +PATH PATH %i/xbin
-## INITENV +PATH PYTHONPATH %i/$PYTHON_LIB_SITE_PACKAGES
-## INITENV +PATH PYTHONPATH %i/x$PYTHON_LIB_SITE_PACKAGES
+## INITENV +PATH PYTHONPATH %i/${PYTHON_LIB_SITE_PACKAGES}
+## INITENV +PATH PYTHONPATH %i/x${PYTHON_LIB_SITE_PACKAGES}
 
-%define wmcver 0.9.95pre5
+%define wmcver 0.9.97
 %define webdoc_files %{installroot}/%{pkgrel}/doc/
-%define crabserver 3.3.6.rc5
+%define crabserver 3.3.10.rc3
 
 
 Source0: git://github.com/dmwm/WMCore.git?obj=master/%{wmcver}&export=WMCore-%{wmcver}&output=/WMCore-%{n}-%{wmcver}.tar.gz
@@ -13,13 +13,13 @@ Source1: git://github.com/dmwm/CRABClient.git?obj=master/%{realversion}&export=C
 Source2: git://github.com/dmwm/CRABServer.git?obj=master/%{crabserver}&export=CRABServer-%{crabserver}&output=/CRABServer-%{crabserver}.tar.gz
 
 Requires: python py2-httplib2 py2-sphinx py2-pycurl
-Patch0: crabclient-setup
+#Patch0: crabclient-setup
 
 %prep
 %setup -D -T -b 1 -n CRABClient-%{realversion}
 %setup -T -b 2 -n CRABServer-%{crabserver}
 %setup -T -b 0 -n WMCore-%{wmcver}
-%patch0 -p1
+#%patch0 -p1
 
 %build
 pushd ../WMCore-%{wmcver}
@@ -75,7 +75,7 @@ for tool in $(echo %{requiredtools} | sed -e's|\s+| |;s|^\s+||'); do
   root=$(echo $tool | tr a-z- A-Z_)_ROOT; eval r=\$$root
   if [ X"$r" != X ] && [ -r "$r/etc/profile.d/init.sh" ]; then
     echo "test X\$$root != X || . $r/etc/profile.d/init.sh" >> %i/etc/profile.d/dependencies-setup.sh
-    echo "test X\$$root != X || source $r/etc/profile.d/init.csh" >> %i/etc/profile.d/dependencies-setup.csh
+    echo "test X\$?$root = X1 || source $r/etc/profile.d/init.csh" >> %i/etc/profile.d/dependencies-setup.csh
   fi
 done
 

@@ -1,4 +1,4 @@
-### RPM cms sreadiness r161
+### RPM cms sreadiness r178
 ## INITENV +PATH PYTHONPATH %i/lib/python`echo $PYTHON_VERSION | cut -d. -f 1,2`/site-packages 
 
 %define svnrev %(echo %realversion|tr -d 'r')
@@ -23,7 +23,7 @@ for tool in $(echo %{requiredtools} | sed -e's|\s+| |;s|^\s+||'); do
   root=$(echo $tool | tr a-z- A-Z_)_ROOT; eval r=\$$root
   if [ X"$r" != X ] && [ -r "$r/etc/profile.d/init.sh" ]; then
     echo "test X\$$root != X || . $r/etc/profile.d/init.sh" >> %i/etc/profile.d/dependencies-setup.sh
-    echo "test X\$$root != X || source $r/etc/profile.d/init.csh" >> %i/etc/profile.d/dependencies-setup.csh
+    echo "test X\$?$root = X1 || source $r/etc/profile.d/init.csh" >> %i/etc/profile.d/dependencies-setup.csh
   fi
 done
 
